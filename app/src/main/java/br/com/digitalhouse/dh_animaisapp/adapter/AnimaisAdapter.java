@@ -12,14 +12,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.digitalhouse.dh_animaisapp.R;
+import br.com.digitalhouse.dh_animaisapp.interfaces.RecyclerViewOnClick;
 import br.com.digitalhouse.dh_animaisapp.model.Animais;
 
 public class AnimaisAdapter extends RecyclerView.Adapter<AnimaisAdapter.ViewHolder> {
 
     private List<Animais> listaAnimais;
 
-    public AnimaisAdapter (List<Animais> listaAnimais){
+    private RecyclerViewOnClick listener;
+
+    public AnimaisAdapter (List<Animais> listaAnimais, RecyclerViewOnClick listener){
         this.listaAnimais = listaAnimais;
+        this.listener = listener;
     }
 
     @NonNull
@@ -30,10 +34,16 @@ public class AnimaisAdapter extends RecyclerView.Adapter<AnimaisAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int posicao) {
-        Animais animal = listaAnimais.get(posicao);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int posicao) {
+        final Animais animal = listaAnimais.get(posicao);
+        holder.onBind(animal);
 
-        viewHolder.onBind(animal);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onClick(animal);
+            }
+        });
     }
 
     @Override

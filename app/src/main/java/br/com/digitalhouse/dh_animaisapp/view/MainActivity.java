@@ -1,5 +1,6 @@
-package br.com.digitalhouse.dh_animaisapp;
+package br.com.digitalhouse.dh_animaisapp.view;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,14 +9,17 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.digitalhouse.dh_animaisapp.R;
 import br.com.digitalhouse.dh_animaisapp.adapter.AnimaisAdapter;
+import br.com.digitalhouse.dh_animaisapp.interfaces.RecyclerViewOnClick;
 import br.com.digitalhouse.dh_animaisapp.model.Animais;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerViewOnClick {
 
     private RecyclerView recyclerView;
     private AnimaisAdapter adapter;
     private List<Animais> listaAnimais = new ArrayList<>();
+    public static final String ANIMAL_KEY = "animal";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewAnimais);
 
-        adapter = new AnimaisAdapter(retornaListaAnimais());
+        adapter = new AnimaisAdapter(retornaListaAnimais(), this);
 
         recyclerView.setAdapter(adapter);
 
@@ -41,5 +45,14 @@ public class MainActivity extends AppCompatActivity {
         listaAnimais.add(new Animais("Golfinho", R.drawable.golfinho));
 
         return listaAnimais;
+    }
+
+    @Override
+    public void onClick(Animais animal) {
+        Intent intent = new Intent (MainActivity.this, DetalheAnimalActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ANIMAL_KEY, animal);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
